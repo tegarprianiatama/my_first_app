@@ -109,7 +109,7 @@ class AcademicOverviewPage extends StatelessWidget {
                   crossAxisCount: isWide ? 2 : 1,
                   crossAxisSpacing: theme.spacingLG,
                   mainAxisSpacing: theme.spacingLG,
-                  childAspectRatio: isWide ? 2.5 : 2.8,
+                  childAspectRatio: isWide ? 2.5 : 2.2,
                   children: const [
                     InfoCard(
                       title: 'GPA',
