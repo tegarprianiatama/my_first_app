@@ -48,4 +48,26 @@ void main() {
     expect(find.text('Test Value'), findsOneWidget);
     expect(find.byIcon(Icons.star), findsOneWidget);
   });
+
+  testWidgets('Dashboard satu kolom di layar sempit', (tester) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const AcademicOverviewApp());
+
+    final width = tester.getSize(find.byType(Card).first).width;
+    expect(width, lessThan(kWideBreakpoint));
+  });
+
+  testWidgets('Dashboard dua kolom di layar lebar', (tester) async {
+    tester.view.physicalSize = const Size(1200, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const AcademicOverviewApp());
+
+    final width = tester.getSize(find.byType(Card).first).width;
+    expect(width, greaterThan(500));
+  });
 }
