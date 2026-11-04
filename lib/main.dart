@@ -2,6 +2,33 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(const AcademicOverviewApp());
 
+extension ThemeSpacing on ThemeData {
+  double get spacingXS => 4;
+  double get spacingSM => 8;
+  double get spacingMD => 12;
+  double get spacingLG => 16;
+  double get spacingXL => 20;
+  double get spacing2XL => 24;
+  
+  double get radiusSM => 8;
+  double get radiusMD => 12;
+  double get radiusLG => 16;
+  
+  double get iconSizeSM => 20;
+  double get iconSizeMD => 24;
+  double get iconSizeLG => 28;
+  double get iconSizeXL => 40;
+  
+  double get avatarRadius => 36;
+  
+  double get breakpointTablet => 600;
+}
+
+extension CardPadding on ThemeData {
+  EdgeInsets get cardPadding => EdgeInsets.all(spacingXL);
+  EdgeInsets get iconButtonPadding => EdgeInsets.all(spacingMD);
+}
+
 class AcademicOverviewApp extends StatefulWidget {
   const AcademicOverviewApp({super.key});
 
@@ -47,6 +74,8 @@ class AcademicOverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Academic Overview'),
@@ -56,30 +85,31 @@ class AcademicOverviewPage extends StatelessWidget {
             child: Row(
               children: [
                 Icon(isDark ? Icons.dark_mode : Icons.light_mode),
-                const SizedBox(width: 8),
+                SizedBox(width: theme.spacingSM),
                 Switch.adaptive(value: isDark, onChanged: onDarkChanged),
-                const SizedBox(width: 16),
+                SizedBox(width: theme.spacingLG),
               ],
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(theme.spacingLG),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const ProfileHeader(),
-            const SizedBox(height: 24),
+            SizedBox(height: theme.spacing2XL),
             LayoutBuilder(
               builder: (context, constraints) {
-                final isWide = constraints.maxWidth >= 600;
+                final theme = Theme.of(context);
+                final isWide = constraints.maxWidth >= theme.breakpointTablet;
                 return GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: isWide ? 2 : 1,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  crossAxisSpacing: theme.spacingLG,
+                  mainAxisSpacing: theme.spacingLG,
                   childAspectRatio: isWide ? 2.5 : 2.8,
                   children: const [
                     InfoCard(
@@ -129,26 +159,26 @@ class ProfileHeader extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(theme.spacingXL),
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(theme.radiusLG),
       ),
       child: Row(
         children: [
           Semantics(
             label: 'Profile picture',
             child: CircleAvatar(
-              radius: 36,
+              radius: theme.avatarRadius,
               backgroundColor: theme.colorScheme.primary,
               child: Icon(
                 Icons.person,
-                size: 40,
+                size: theme.iconSizeXL,
                 color: theme.colorScheme.onPrimary,
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: theme.spacingLG),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +189,7 @@ class ProfileHeader extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: theme.spacingXS),
                 Text('NIM: 20210101001', style: theme.textTheme.bodyMedium),
                 Text(
                   'Teknik Informatika',
@@ -203,22 +233,22 @@ class InfoCard extends StatelessWidget {
       label: semanticLabel,
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: theme.cardPadding,
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: theme.iconButtonPadding,
                 decoration: BoxDecoration(
                   color: colors.containerColor,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(theme.radiusMD),
                 ),
                 child: Icon(
                   icon,
                   color: colors.iconColor,
-                  size: 28,
+                  size: theme.iconSizeLG,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: theme.spacingLG),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
