@@ -82,10 +82,34 @@ class AcademicOverviewPage extends StatelessWidget {
                   mainAxisSpacing: 16,
                   childAspectRatio: isWide ? 2.5 : 2.8,
                   children: const [
-                    GPACard(),
-                    CreditsCard(),
-                    ScheduleCard(),
-                    AnnouncementsCard(),
+                    InfoCard(
+                      title: 'GPA',
+                      value: '3.75 / 4.00',
+                      icon: Icons.school,
+                      semanticLabel: 'GPA: 3.75 out of 4.0',
+                      colorType: InfoCardColor.primary,
+                    ),
+                    InfoCard(
+                      title: 'Credits',
+                      value: '96 / 144 SKS',
+                      icon: Icons.workspace_premium,
+                      semanticLabel: 'Credits: 96 out of 144 completed',
+                      colorType: InfoCardColor.secondary,
+                    ),
+                    InfoCard(
+                      title: 'Today Schedule',
+                      value: '3 Classes',
+                      icon: Icons.schedule,
+                      semanticLabel: 'Today schedule: 3 classes. Mobile Programming at 08:00, Database Systems at 10:00, Software Engineering at 13:00',
+                      colorType: InfoCardColor.tertiary,
+                    ),
+                    InfoCard(
+                      title: 'Announcements',
+                      value: '5 Unread',
+                      icon: Icons.notifications_active,
+                      semanticLabel: '5 unread announcements',
+                      colorType: InfoCardColor.error,
+                    ),
                   ],
                 );
               },
@@ -154,15 +178,29 @@ class ProfileHeader extends StatelessWidget {
   }
 }
 
-class GPACard extends StatelessWidget {
-  const GPACard({super.key});
+class InfoCard extends StatelessWidget {
+  const InfoCard({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.semanticLabel,
+    this.colorType = InfoCardColor.primary,
+    super.key,
+  });
+
+  final String title;
+  final String value;
+  final IconData icon;
+  final String semanticLabel;
+  final InfoCardColor colorType;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = _getColors(theme);
 
     return Semantics(
-      label: 'GPA: 3.75 out of 4.0',
+      label: semanticLabel,
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -171,12 +209,12 @@ class GPACard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
+                  color: colors.containerColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.school,
-                  color: theme.colorScheme.primary,
+                  icon,
+                  color: colors.iconColor,
                   size: 28,
                 ),
               ),
@@ -186,12 +224,12 @@ class GPACard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('GPA', style: theme.textTheme.titleMedium),
+                    Text(title, style: theme.textTheme.titleMedium),
                     Text(
-                      '3.75 / 4.00',
+                      value,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
+                        color: colors.textColor,
                       ),
                     ),
                   ],
@@ -202,160 +240,48 @@ class GPACard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _CardColors _getColors(ThemeData theme) {
+    switch (colorType) {
+      case InfoCardColor.primary:
+        return _CardColors(
+          containerColor: theme.colorScheme.primaryContainer,
+          iconColor: theme.colorScheme.primary,
+          textColor: theme.colorScheme.primary,
+        );
+      case InfoCardColor.secondary:
+        return _CardColors(
+          containerColor: theme.colorScheme.secondaryContainer,
+          iconColor: theme.colorScheme.secondary,
+          textColor: theme.colorScheme.secondary,
+        );
+      case InfoCardColor.tertiary:
+        return _CardColors(
+          containerColor: theme.colorScheme.tertiaryContainer,
+          iconColor: theme.colorScheme.tertiary,
+          textColor: theme.colorScheme.tertiary,
+        );
+      case InfoCardColor.error:
+        return _CardColors(
+          containerColor: theme.colorScheme.errorContainer,
+          iconColor: theme.colorScheme.error,
+          textColor: theme.colorScheme.error,
+        );
+    }
   }
 }
 
-class CreditsCard extends StatelessWidget {
-  const CreditsCard({super.key});
+enum InfoCardColor { primary, secondary, tertiary, error }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    const completed = 96;
-    const total = 144;
+class _CardColors {
+  const _CardColors({
+    required this.containerColor,
+    required this.iconColor,
+    required this.textColor,
+  });
 
-    return Semantics(
-      label: 'Credits: $completed out of $total completed',
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.workspace_premium,
-                  color: theme.colorScheme.secondary,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Credits', style: theme.textTheme.titleMedium),
-                    Text(
-                      '$completed / $total SKS',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ScheduleCard extends StatelessWidget {
-  const ScheduleCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Semantics(
-      label: 'Today schedule: 3 classes. Mobile Programming at 08:00, Database Systems at 10:00, Software Engineering at 13:00',
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.tertiaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.schedule,
-                  color: theme.colorScheme.tertiary,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Today Schedule', style: theme.textTheme.titleMedium),
-                    Text(
-                      '3 Classes',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.tertiary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AnnouncementsCard extends StatelessWidget {
-  const AnnouncementsCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Semantics(
-      label: '5 unread announcements',
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  Icons.notifications_active,
-                  color: theme.colorScheme.error,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Announcements', style: theme.textTheme.titleMedium),
-                    Text(
-                      '5 Unread',
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  final Color containerColor;
+  final Color iconColor;
+  final Color textColor;
 }
