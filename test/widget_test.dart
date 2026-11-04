@@ -8,11 +8,14 @@ void main() {
     await tester.pumpWidget(const AcademicOverviewApp());
 
     // Verify profile header
-    expect(find.text('Ahmad Rizki Pratama'), findsOneWidget);
+    expect(find.text('Tegar Prianiatama'), findsOneWidget);
     expect(find.text('NIM: 20210101001'), findsOneWidget);
     expect(find.text('Teknik Informatika'), findsOneWidget);
 
-    // Verify info cards
+    // Verify info cards via InfoCard widget
+    expect(find.byType(InfoCard), findsNWidgets(4));
+    
+    // Verify specific card content
     expect(find.text('GPA'), findsOneWidget);
     expect(find.text('3.75 / 4.00'), findsOneWidget);
     expect(find.text('Credits'), findsOneWidget);
@@ -24,5 +27,25 @@ void main() {
 
     // Verify theme toggle
     expect(find.byType(Switch), findsOneWidget);
+  });
+
+  testWidgets('InfoCard renders with custom props', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: const InfoCard(
+            title: 'Test Title',
+            value: 'Test Value',
+            icon: Icons.star,
+            semanticLabel: 'Test semantic',
+            colorType: InfoCardColor.primary,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Test Title'), findsOneWidget);
+    expect(find.text('Test Value'), findsOneWidget);
+    expect(find.byIcon(Icons.star), findsOneWidget);
   });
 }
