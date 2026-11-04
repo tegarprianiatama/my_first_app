@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const double kWideBreakpoint = 600;
+
 void main() => runApp(const AcademicOverviewApp());
 
 extension ThemeSpacing on ThemeData {
@@ -20,8 +22,6 @@ extension ThemeSpacing on ThemeData {
   double get iconSizeXL => 40;
   
   double get avatarRadius => 36;
-  
-  double get breakpointTablet => 600;
 }
 
 extension CardPadding on ThemeData {
@@ -102,8 +102,7 @@ class AcademicOverviewPage extends StatelessWidget {
             SizedBox(height: theme.spacing2XL),
             LayoutBuilder(
               builder: (context, constraints) {
-                final theme = Theme.of(context);
-                final isWide = constraints.maxWidth >= theme.breakpointTablet;
+                final isWide = constraints.maxWidth >= kWideBreakpoint;
                 return GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
